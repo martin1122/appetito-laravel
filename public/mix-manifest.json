@@ -1,0 +1,9 @@
+{
+    "/js/dashboard.js": "/js/dashboard.js",
+    "/js/vendor.js": "/js/vendor.js",
+    "/js/app.js": "/js/app.js",
+    "/css/app.css": "/css/app.css",
+    "/js/modules/moderator.js": "/js/modules/moderator.js",
+    "/js/modules/manifest.js": "/js/modules/manifest.js",
+    "/js/datatable.js": "/js/datatable.js"
+}

@@ -1,0 +1,37 @@
+before_script:
+  - echo "Before script"
+  - cd /var/www/html/coolinary
+building:
+  stage: build
+  script:
+    - git reset --hard
+    - git pull origin develop
+    - composer install
+    - cp .env.example .env
+    - php artisan key:generate
+    - php artisan migrate --seed
+    - php artisan passport:install
+    - php artisan cache:clear
+    - php artisan config:clear
+    - php artisan storage:link
+    - sudo chown -R deployer:www-data /var/www/html/coolinary/
+    - find /var/www/html/coolinary -type f -exec chmod 664 {} \;
+    - find /var/www/html/coolinary -type d -exec chmod 775 {} \;
+    - chgrp -R www-data storage bootstrap/cache
+    - chmod -R ug+rwx storage bootstrap/cache
+testing:
+  stage: test
+  script:
+    - cp .env.testing.example .env.testing
+    - php artisan config:clear
+    - php artisan key:generate --env=testing
+    - php artisan migrate --env=testing
+    - php artisan db:seed --env=testing
+    - php artisan passport:install --env=testing
+    - php ./vendor/bin/phpunit
+deploying:
+  stage: deploy
+  script:
+    - echo "Deployed"
+    - php artisan queue:restart
+    - php artisan telegram:send
